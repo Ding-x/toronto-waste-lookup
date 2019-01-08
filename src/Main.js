@@ -40,9 +40,12 @@ class Main extends Component {
     })
     .then(response => response.json())
     .then(response => {
+      var key=0;
       for(let data of response){
         data.favorite=false;
+        data.key=key++;
       }
+      console.log(response)
         this.setState(
           {
             data:response,
@@ -73,13 +76,24 @@ class Main extends Component {
         })
   }
 
-  handleFavorite=(index)=>{
-    var data=this.state.searchData;
-    data[index].favorite=!data[index].favorite
+  handleFavorite=(data)=>{
+    console.log(data)
+    var dataList=this.state.data;
+    for(let one of dataList){
+      if(one.key===data.key){
+        one.favorite=!one.favorite
+      }
+    }
     this.setState({
-      searchData:data
-  })
-}
+      data:dataList
+    })
+    var result=this.state.data.filter(data=>{
+      return data.keywords.indexOf(this.state.search) > -1
+    })
+      this.setState({
+          searchData:result
+        })
+  }
 
 
   render() {
@@ -95,7 +109,7 @@ class Main extends Component {
            return(
              <div className="root" key={index}>
                <div className="title" >
-               {data.favorite?<span className="star-green" onClick={() => this.handleFavorite(index)}><FontAwesomeIcon icon="star" /></span>:<span className="star-grey" onClick={() => this.handleFavorite(index)}><FontAwesomeIcon icon="star" /></span>}<span>{data.title}</span></div>
+               {data.favorite?<span className="star-green" onClick={() => this.handleFavorite(data)}><FontAwesomeIcon icon="star" /></span>:<span className="star-grey" onClick={() => this.handleFavorite(data)}><FontAwesomeIcon icon="star" /></span>}<span>{data.title}</span></div>
                <div className="body" dangerouslySetInnerHTML={{ __html: this.htmlDecode(data.body) }} />
              </div>
            )
@@ -105,13 +119,13 @@ class Main extends Component {
 
          <p className="favourite">Favourites</p>
 
-         {this.state.searchData!==null? 
-         this.state.searchData.map((data,index)=>{
+         {this.state.data!==null? 
+         this.state.data.map((data,index)=>{
            if(data.favorite){
             return(
               <div className="root" key={index}>
                 <div className="title" >
-                {data.favorite?<span className="star-green" onClick={() => this.handleFavorite(index)}><FontAwesomeIcon icon="star" /></span>:<span className="star-grey" onClick={() => this.handleFavorite(index)}><FontAwesomeIcon icon="star" /></span>}<span>{data.title}</span></div>
+                {data.favorite?<span className="star-green" onClick={() => this.handleFavorite(data)}><FontAwesomeIcon icon="star" /></span>:<span className="star-grey" onClick={() => this.handleFavorite(data)}><FontAwesomeIcon icon="star" /></span>}<span>{data.title}</span></div>
                 <div className="body" dangerouslySetInnerHTML={{ __html: this.htmlDecode(data.body) }} />
               </div>
             )
