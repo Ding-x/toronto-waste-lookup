@@ -45,7 +45,6 @@ class Main extends Component {
         data.favorite=false;
         data.key=key++;
       }
-      console.log(response)
         this.setState(
           {
             data:response,
@@ -65,6 +64,9 @@ class Main extends Component {
 
   changeSearchValue = (e) => {
     this.setState({ search: e.target.value })
+    if(e.key==='Enter'){
+      this.search();
+    }
   }
 
   search(){
@@ -77,7 +79,6 @@ class Main extends Component {
   }
 
   handleFavorite=(data)=>{
-    console.log(data)
     var dataList=this.state.data;
     for(let one of dataList){
       if(one.key===data.key){
@@ -87,12 +88,7 @@ class Main extends Component {
     this.setState({
       data:dataList
     })
-    var result=this.state.data.filter(data=>{
-      return data.keywords.indexOf(this.state.search) > -1
-    })
-      this.setState({
-          searchData:result
-        })
+
   }
 
 
@@ -101,7 +97,7 @@ class Main extends Component {
     return (
       <div className="App">
       <div className="header">Toronto Waste Lookup</div>
-      <input className="input-style" type="text" onChange={this.changeSearchValue} onKeyDown={this.search} ></input>
+      <input className="input-style" type="text" onKeyUp={this.changeSearchValue}  onKeyPress={this.changeSearchValue}></input>
       <button className="btn-style" onClick={this.search}><FontAwesomeIcon className="search" icon="search" /></button>
 
        {this.state.searchData!==null? 
