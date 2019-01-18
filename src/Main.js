@@ -17,7 +17,7 @@ class Main extends Component {
   }
 
 
-  //  Fetch data with offered api
+  //  Fetch data with offered api.
   componentDidMount(){
     const url= "https://secure.toronto.ca/cc_sr_v1/data/swm_waste_wizard_APR?limit=1000"
     fetch(url, {
